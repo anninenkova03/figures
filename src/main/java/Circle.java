@@ -15,4 +15,9 @@ public class Circle implements Figure {
     public double perimeter() {
         return 2 * Math.PI * r;
     }
+
+    @Override
+    public String toString() {
+        return String.format("circle %f", r);
+    }
 }

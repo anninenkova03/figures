@@ -4,6 +4,12 @@ import static org.junit.Assert.*;
 public class FigureTests {
 
     @Test
+    public void testTriangleProperties() {
+        Triangle triangle = new Triangle(3.0, 4.42, 5.55);
+        assertEquals(String.format("triangle %f %f %f", 3.0, 4.42, 5.55), triangle.toString());
+    }
+
+    @Test
     public void testTrianglePerimeter() {
         Triangle triangle = new Triangle(3, 4, 5);
         assertEquals(12, triangle.perimeter(), 0);
@@ -54,6 +60,12 @@ public class FigureTests {
     }
 
     @Test
+    public void testCircleProperties() {
+        Circle circle = new Circle(2.36);
+        assertEquals(String.format("circle %f", 2.36), circle.toString());
+    }
+
+    @Test
     public void testCirclePerimeter() {
         Circle circle = new Circle(2);
         assertEquals(4 * Math.PI, circle.perimeter(), 0);
@@ -79,6 +91,12 @@ public class FigureTests {
     public void testEdgeCaseValidCircle() {
         Circle circle = new Circle(Double.MAX_VALUE / (2 * Math.PI));
         assertEquals(Double.MAX_VALUE, circle.perimeter(), 0.0001);
+    }
+
+    @Test
+    public void testRectangleProperties() {
+        Rectangle rectangle = new Rectangle(2.42, 3.36);
+        assertEquals(String.format("rectangle %f %f", 2.42, 3.36), rectangle.toString());
     }
 
     @Test

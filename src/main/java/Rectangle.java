@@ -20,5 +20,10 @@ public class Rectangle implements Figure {
     public double perimeter() {
         return 2 * (width + height);
     }
+
+    @Override
+    public String toString() {
+        return String.format("rectangle %f %f", width, height);
+    }
 }
 

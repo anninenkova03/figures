@@ -23,4 +23,9 @@ public class Triangle implements Figure {
     public double perimeter() {
         return a + b + c;
     }
+
+    @Override
+    public String toString() {
+        return String.format("triangle %f %f %f", a, b, c);
+    }
 }
