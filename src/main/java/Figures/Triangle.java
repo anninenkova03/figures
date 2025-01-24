@@ -1,3 +1,5 @@
+package Figures;
+
 public class Triangle implements Figure {
     private final double a;
     private final double b;

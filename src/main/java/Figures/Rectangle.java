@@ -1,3 +1,5 @@
+package Figures;
+
 public class Rectangle implements Figure {
     private final double width;
     private final double height;
