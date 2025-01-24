@@ -25,5 +25,14 @@ public class Rectangle implements Figure {
     public String toString() {
         return String.format("rectangle %f %f", width, height);
     }
+
+    @Override
+    public Rectangle clone() {
+        try {
+            return (Rectangle) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Cloning not supported", e);
+        }
+    }
 }
 

@@ -20,4 +20,13 @@ public class Circle implements Figure {
     public String toString() {
         return String.format("circle %f", r);
     }
+
+    @Override
+    public Circle clone() {
+        try {
+            return (Circle) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Cloning not supported", e);
+        }
+    }
 }

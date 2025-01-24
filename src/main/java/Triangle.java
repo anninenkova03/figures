@@ -28,4 +28,13 @@ public class Triangle implements Figure {
     public String toString() {
         return String.format("triangle %f %f %f", a, b, c);
     }
+
+    @Override
+    public Triangle clone() {
+        try {
+            return (Triangle) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Cloning not supported", e);
+        }
+    }
 }

@@ -5,7 +5,7 @@ public class FigureTests {
 
     @Test
     public void testTriangleProperties() {
-        Triangle triangle = new Triangle(3.0, 4.42, 5.55);
+        Triangle triangle = new Triangle(3, 4.42, 5.55);
         assertEquals(String.format("triangle %f %f %f", 3.0, 4.42, 5.55), triangle.toString());
     }
 
