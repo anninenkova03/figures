@@ -2,51 +2,67 @@ package factories;
 
 import figures.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.lang.reflect.Constructor;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
+import org.reflections.Reflections;
 
 public class RandomFigureFactory implements FigureFactory {
     private final Random random = new Random();
+    private final List<Class<? extends Figure>> figureClasses;
+
+    public RandomFigureFactory() {
+        Reflections reflections = new Reflections("figures");
+        figureClasses = new ArrayList<>(reflections.getSubTypesOf(Figure.class));
+    }
+
     private static final double MAX_DIMENSION = 100.0;
     private static final double MIN_DIMENSION = 0.1;
 
     @Override
     public Figure create() {
-        // 0 for Circle, 1 for Rectangle, 2 for Triangle
-        int figureType = random.nextInt(3);
+        while (!figureClasses.isEmpty()) {
+            Class<? extends Figure> cls = figureClasses.get(random.nextInt(figureClasses.size()));
 
-        return switch (figureType) {
-            case 0 -> createRandomCircle();
-            case 1 -> createRandomRectangle();
-            case 2 -> createRandomTriangle();
-            default -> throw new IllegalStateException("Unexpected random value generated: " + figureType);
-        };
-    }
+            if (cls.getSimpleName().equals("Triangle")) {
+                return createRandomTriangle();
+            }
 
-    private Circle createRandomCircle() {
-        double radius = MIN_DIMENSION + (MAX_DIMENSION - MIN_DIMENSION) * random.nextDouble();
-        return new Circle(radius);
-    }
+            for (Constructor<?> ctor : cls.getConstructors()) {
+                Class<?>[] paramTypes = ctor.getParameterTypes();
 
-    private Rectangle createRandomRectangle() {
-        double width = MIN_DIMENSION + (MAX_DIMENSION - MIN_DIMENSION) * random.nextDouble();
-        double height = MIN_DIMENSION + (MAX_DIMENSION - MIN_DIMENSION) * random.nextDouble();
-        return new Rectangle(width, height);
+                if (paramTypes.length > 0 && Arrays.stream(paramTypes).allMatch(p -> p == double.class)) {
+                    Object[] args = Arrays.stream(paramTypes)
+                            .map(p -> MIN_DIMENSION + random.nextDouble() * (MAX_DIMENSION - MIN_DIMENSION))
+                            .toArray();
+
+                    try {
+                        return (Figure) ConstructorUtils.invokeConstructor(cls, args);
+                    } catch (ReflectiveOperationException _) {}
+                }
+            }
+
+            figureClasses.remove(cls);
+        }
+
+        throw new RuntimeException("No figure types with suitable double-only constructors found.");
     }
 
     private Triangle createRandomTriangle() {
         while (true) {
             try {
-                double a = MIN_DIMENSION + (MAX_DIMENSION - MIN_DIMENSION) * random.nextDouble();
-                double b = MIN_DIMENSION + (MAX_DIMENSION - MIN_DIMENSION) * random.nextDouble();
-
-                // c must be in range (|a - b|, a + b)
+                double a = MIN_DIMENSION + random.nextDouble() * (MAX_DIMENSION - MIN_DIMENSION);
+                double b = MIN_DIMENSION + random.nextDouble() * (MAX_DIMENSION - MIN_DIMENSION);
                 double lowerBound = Math.max(Math.abs(a - b), MIN_DIMENSION);
                 double upperBound = Math.min(a + b, MAX_DIMENSION);
-                double c = lowerBound + (upperBound - lowerBound) * random.nextDouble();
-
+                if (lowerBound >= upperBound) continue;
+                double c = lowerBound + random.nextDouble() * (upperBound - lowerBound);
                 return new Triangle(a, b, c);
-            } catch (IllegalArgumentException _) {
-            }
+            } catch (IllegalArgumentException _) {}
         }
     }
+
 }

@@ -2,7 +2,10 @@ package factories;
 
 import figures.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 
 public class StringToFigure {
     public Figure createFrom(String representation) {
@@ -13,55 +16,35 @@ public class StringToFigure {
         representation = representation.replace(".", ",");
 
         try (Scanner scanner = new Scanner(representation)) {
-            String figureType = scanner.next();
-            int wordCount = representation.split("\\s+").length;
+            String type = scanner.next();
+            String className = Character.toUpperCase(type.charAt(0)) + type.substring(1);
+            String fullClassName = "figures." + className;
 
-            switch (figureType.toLowerCase()) {
-                case "triangle": {
-                    if (wordCount != 4) {
-                        throw new IllegalArgumentException("Invalid argument count");
-                    }
-                    if (!scanner.hasNextDouble()) {
-                        throw new IllegalArgumentException("Invalid side a for triangle");
-                    }
-                    double a = scanner.nextDouble();
-                    if (!scanner.hasNextDouble()) {
-                        throw new IllegalArgumentException("Invalid side b for triangle");
-                    }
-                    double b = scanner.nextDouble();
-                    if (!scanner.hasNextDouble()) {
-                        throw new IllegalArgumentException("Invalid side c for triangle");
-                    }
-                    double c = scanner.nextDouble();
-                    return new Triangle(a, b, c);
-                }
-                case "circle": {
-                    if (wordCount != 2) {
-                        throw new IllegalArgumentException("Invalid argument count");
-                    }
-                    if (!scanner.hasNextDouble()) {
-                        throw new IllegalArgumentException("Invalid radius for a circle");
-                    }
-                    double radius = scanner.nextDouble();
-                    return new Circle(radius);
-                }
-                case "rectangle": {
-                    if (wordCount != 3) {
-                        throw new IllegalArgumentException("Invalid argument count");
-                    }
-                    if (!scanner.hasNextDouble()) {
-                        throw new IllegalArgumentException("Invalid width for rectangle");
-                    }
-                    double width = scanner.nextDouble();
-                    if (!scanner.hasNextDouble()) {
-                        throw new IllegalArgumentException("Invalid height for rectangle");
-                    }
-                    double height = scanner.nextDouble();
-                    return new Rectangle(width, height);
-                }
-                default:
-                    throw new IllegalArgumentException("Unknown figure type: " + figureType);
+            Class<?> cls;
+            try {
+                cls = Class.forName(fullClassName);
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException("Unknown figure type: " + className);
             }
+            if (!Figure.class.isAssignableFrom(cls)) {
+                throw new IllegalArgumentException(className + " exists, but is not a subtype of Figure.");
+            }
+
+            List<Double> args = new ArrayList<>();
+            while (scanner.hasNext()) {
+                if (scanner.hasNextDouble()) {
+                    args.add(scanner.nextDouble());
+                } else {
+                    throw new IllegalArgumentException("Invalid argument: " + scanner.next());
+                }
+            }
+
+            Object[] arguments = new Object[args.size()];
+            for (int i = 0; i < args.size(); i++) {
+                arguments[i] = args.get(i);
+            }
+
+            return (Figure) ConstructorUtils.invokeConstructor(cls, arguments);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
