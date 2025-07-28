@@ -1,3 +1,5 @@
+package factories;
+
 import figures.*;
 
 import java.io.InputStream;

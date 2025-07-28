@@ -1,3 +1,4 @@
+import factories.RandomFigureFactory;
 import figures.*;
 
 import org.junit.Test;

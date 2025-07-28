@@ -1,3 +1,4 @@
+import factories.StringToFigure;
 import figures.*;
 
 import org.junit.Test;

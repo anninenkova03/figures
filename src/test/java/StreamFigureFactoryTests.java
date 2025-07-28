@@ -1,3 +1,4 @@
+import factories.StreamFigureFactory;
 import figures.*;
 
 import org.junit.Test;
