@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 public class Rectangle implements Figure {
     private final double width;

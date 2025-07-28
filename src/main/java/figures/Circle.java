@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 public class Circle implements Figure {
     private final double r;

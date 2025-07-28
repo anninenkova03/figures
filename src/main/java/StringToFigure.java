@@ -1,4 +1,4 @@
-import Figures.*;
+import figures.*;
 
 import java.util.Scanner;
 
@@ -8,7 +8,7 @@ public class StringToFigure {
             throw new IllegalArgumentException("Input string cannot be null or empty");
         }
 
-        representation = representation.replace('.', ',');
+        representation = representation.replace(".", ",");
 
         try (Scanner scanner = new Scanner(representation)) {
             String figureType = scanner.next();

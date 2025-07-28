@@ -1,4 +1,4 @@
-import Figures.*;
+import figures.*;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -17,8 +17,10 @@ public class StringToFigureTests {
 
     @Test
     public void testUnknownFigureName() {
-        assertThrows(IllegalArgumentException.class,
-                () -> factory.createFrom("unknown 10 20"));
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class,
+                        () -> factory.createFrom("unknown 10 20"));
+        assertEquals("Unknown figure type: unknown", exception.getMessage());
     }
 
     @Test
@@ -70,7 +72,7 @@ public class StringToFigureTests {
 
     @Test
     public void testCreateCircle() {
-        Figure figure = factory.createFrom("circle 10.5");
+        Figure figure = factory.createFrom("circle 10,5");
         assertTrue(figure instanceof Circle);
         assertEquals(String.format("circle %f", 10.5), figure.toString());
     }

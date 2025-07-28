@@ -1,7 +1,7 @@
-import Figures.Circle;
-import Figures.Figure;
-import Figures.Rectangle;
-import Figures.Triangle;
+import figures.Circle;
+import figures.Figure;
+import figures.Rectangle;
+import figures.Triangle;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
